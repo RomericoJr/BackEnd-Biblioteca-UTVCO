@@ -21,7 +21,7 @@ return new class extends Migration
                         $table->unsignedBigInteger('id_rol');
             $table->foreign('id_rol')->references('id')->on('rols');
 
-            $table->unsignedBigInteger('id_students');
+            $table->unsignedBigInteger('id_students')->nullable();
             $table->foreign('id_students')->references('id')->on('students');
 
             $table->rememberToken();
