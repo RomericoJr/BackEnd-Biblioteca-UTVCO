@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\authController;
+use App\Http\Controllers\StudentsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,3 +23,16 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'jwt.auth'], function () {
     // Rutas protegidas por JWT
 });
+
+
+Route::post('Back%%Biblioteca_UTVCO/login', [authController::class, 'login']);
+Route::post('Back%%Biblioteca_UTVCO/register', [authController::class, 'register']);
+Route::get('Back%%Biblioteca_UTVCO/refresh', [authController::class, 'refresh']);
+Route::get('Back%%Biblioteca_UTVCO/logout', [authController::class, 'logout']);
+Route::get('Back%%Biblioteca_UTVCO/user-profile', [authController::class, 'userDetails']);
+
+
+Route::post('Back%%Biblioteca_UTVCO/registerStudent',[StudentsController::class, 'registerStudent']);
+Route::get('Back%%Biblioteca_UTVCO/getStudent',[StudentsController::class, 'getStudents']);
+Route::get('Back%%Biblioteca_UTVCO/getStudentByMatricula/{matricula}',[StudentsController::class, 'getStudentByMatricula']);
+Route::put('Back%%Biblioteca_UTVCO/updateStudent/{email}',[StudentsController::class, 'updateStudent']);
