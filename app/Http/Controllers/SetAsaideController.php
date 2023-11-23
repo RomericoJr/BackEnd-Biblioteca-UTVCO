@@ -23,6 +23,9 @@ class SetAsaideController extends Controller
     
 
     public function addApartado(Request $request){
+        print_r($request);
+
+
         $apartados = Apartados::create($request->all());
         return response($apartados, 201);
     }

@@ -69,8 +69,14 @@ Route::delete('delApartado/{id}',[SetAsaideController::class, 'deleteAsaide']);
 
 
 
+//Controlador de Donaciones de estadias
+//Funcion de donaciones
 Route::get('donaciones',[EstadiasController::class, 'getEstadias']);
+//Funcion de donacion por id
 Route::get('donacion/{id}',[EstadiasController::class, 'getEstadiasById']);
+//Funcion de agregar donacion
 Route::post('newDonacion',[EstadiasController::class, 'addEstadia']);
+//Funcion de editar donacion
 Route::put('editDonacion/{id}',[EstadiasController::class, 'updateEstadia']);
+//Funcion de eliminar donacion
 Route::delete('delDonacion/{id}',[EstadiasController::class, 'deleteEstadia']);
