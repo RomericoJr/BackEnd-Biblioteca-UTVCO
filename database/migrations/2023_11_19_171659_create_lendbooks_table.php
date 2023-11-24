@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_book');
             $table->foreign('id_book')->references('id')->on('books');
 
+            $table->string('lend_number');
             $table->date('lend_date');
             $table->date('return_date');
             // $table->date('return_date_real');
