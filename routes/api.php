@@ -12,6 +12,8 @@ use App\Http\Controllers\StudentsController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SubcategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -99,4 +101,29 @@ Route::post('Back%%Biblioteca_UTVCO/registerStudent',[StudentsController::class,
 Route::get('Back%%Biblioteca_UTVCO/getStudent',[StudentsController::class, 'getStudents']);
 Route::get('Back%%Biblioteca_UTVCO/getStudentByMatricula/{matricula}',[StudentsController::class, 'getStudentByMatricula']);
 Route::put('Back%%Biblioteca_UTVCO/updateStudent/{email}',[StudentsController::class, 'updateStudent']);
+
+
+//Rutas de Categorias
+// add categories
+Route::post('Back%%Biblioteca_UTVCO/addCategoria', [CategoryController::class, 'addCategory']);
+// get categories
+Route::get('Back%%Biblioteca_UTVCO/categoria', [CategoryController::class, 'getCategory']);
+// delete categories
+Route::delete('Back%%Biblioteca_UTVCO/deleteCategoria/{id}', [CategoryController::class, 'deleteCatego']);
+// get by id categories
+Route::get('Back%%Biblioteca_UTVCO/categoria/{id}', [CategoryController::class, 'getCategoId']);
+// update categories
+Route::put('Back%%Biblioteca_UTVCO/updateCategoria/{id}', [CategoryController::class, 'updateCatego']);
+
+//Rutas de Subcategorias
+// add sub-categories
+Route::post('Back%%Biblioteca_UTVCO/addSubcategoria', [SubcategoryController::class, 'addSubcategory']);
+// get sub-categories
+Route::get('Back%%Biblioteca_UTVCO/subcategoria', [SubcategoryController::class, 'getSubcategory']);
+// delete sub-categories
+Route::delete('Back%%Biblioteca_UTVCO/deleteSubategoria/{id}', [SubcategoryController::class, 'deleteSubcatego']);
+// get by id sub-categories
+Route::get('Back%%Biblioteca_UTVCO/subcategoria/{id}', [SubcategoryController::class, 'getSubcategoId']);
+// update sub-categories
+Route::put('Back%%Biblioteca_UTVCO/updateSubcategoria/{id}', [SubcategoryController::class, 'updateSubcatego']);
 
