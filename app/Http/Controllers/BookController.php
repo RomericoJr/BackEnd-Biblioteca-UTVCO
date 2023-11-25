@@ -22,6 +22,16 @@ class BookController extends Controller
     }
 
     public function addBook(Request $request){
+        $request->validate([
+            'isbn' => 'required|string|max: 50',
+            'title' => 'required|string|max: 50',
+            'author' => 'required|string|max: 50',
+            'editorial' => 'required|string|max: 50',
+            'edition' => 'required|string|max: 50',
+            'id_category' => 'required|exists: category,id',
+            'id_subcategory' => 'required|exists: subcategory, id',
+            
+        ]);
         $book = Book::create($request->all());
         return response($book, 201);
     }

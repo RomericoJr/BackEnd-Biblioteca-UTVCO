@@ -22,6 +22,9 @@ class GenereController extends Controller
     }
 
     public function addGenere(Request $request){
+        $request->validate([
+            'genere' => 'required|string|max: 50',
+        ]);
         $genere = Genere::create($request->all());
         return response($genere, 201);
     }

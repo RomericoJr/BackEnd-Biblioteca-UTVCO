@@ -22,6 +22,14 @@ class EstadiasController extends Controller
     }
 
     public function addEstadia(Request $request){
+
+        $request->validate([
+            'title' => 'required|string|max: 50',
+            'author' => 'required|string|max: 50',
+            'description' => 'required|string|max: 255',
+            'copias' => 'required|string|max: 10',
+            
+        ]);
         $estadia = Estadias::create($request->all());
         return response($estadia, 201);
     }

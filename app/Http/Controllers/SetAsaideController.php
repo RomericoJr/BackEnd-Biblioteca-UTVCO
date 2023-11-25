@@ -23,6 +23,12 @@ class SetAsaideController extends Controller
     
 
     public function addApartado(Request $request){
+        $request->validate([
+            'id_student' => 'required|exists: student,id',
+            'id_book' => 'required|exists: book,id',
+            'date_set_asaide' => 'required|string|max: 50',
+            'status' => 'required|boolean',
+        ]);
         print_r($request);
 
 
