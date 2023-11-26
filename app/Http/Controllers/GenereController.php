@@ -4,46 +4,115 @@ namespace App\Http\Controllers;
 
 use App\Models\Genere;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class GenereController extends Controller
 {
     public function getGenere(){
-        $genere = Genere::all();
-        return response($genere, 200);
+        try{
+            $genere = Genere::all();
+            return response()->json([
+                'message' => 'Successful',
+                'genere' => $genere
+            ], 200);
+        }
+        catch(\Exception $e){
+            return response()->json([
+                'message' => 'Failed to query generes',
+                'error' => $e->getMessage()
+            ], 400);
+        }
     }
 
     public function getGenereById($id){
-        $genere = Genere::find($id);
-        if($genere){
-            return response($genere, 200);
-        }else{
-            return response(['message'=>'Genere not found']);
+        try{
+            $genere = Genere::find($id);
+            if(is_null($genere)){
+                return response()->json([
+                    'message' => 'Genere not found',
+                ], 404);
+            }
+            return response()->json([
+                'message' => 'Successful',
+                'genere' => $genere
+            ], 200);
+        }
+        catch(\Exception $e){
+            return response()->json([
+                'message' => 'Failed to query genere',
+                'error' => $e->getMessage()
+            ], 400);
         }
     }
 
     public function addGenere(Request $request){
-        $genere = Genere::create($request->all());
-        return response($genere, 201);
+        try{
+            $validator = Validator::make($request->all(),[
+                'genere' => 'required|string|max:255',
+            ]);
+            if($validator->fails()){
+                return response()->json($validator->errors()->toJson(),400);
+            }
+            $genere = Genere::create([
+                'genere' => $request->get('genere'),
+            ]);
+            return response()->json([
+                'message' => 'Genere successfully',
+                'genere' => $genere
+            ], 201);
+        }
+        catch(\Exception $e){
+            return response()->json([
+                'message' => 'Genere failed',
+                'error' => $e->getMessage()
+            ], 400);
+        }
+
     }
 
     public function updateGenere(Request $request, $id){
-        $genere = Genere::find($id);
-        if(is_null($genere)){
-            return response(['message'=>'Genere not found'], 404);
-            
-        }else{
-            $genere->update($request->all());
-            return response($genere, 200);
+        try{
+            $validator = Validator::make($request->all(),[
+                'genere' => 'required|string|max:255',
+            ]);
+            if($validator->fails()){
+                return response()->json($validator->errors()->toJson(),400);
+            }
+            $genere = Genere::find($id);
+            $genere->update([
+                'genere' => $request->get('genere'),
+            ]);
+            return response()->json([
+                'message' => 'Genere successfully',
+                'genere' => $genere
+            ], 201);
+        }
+        catch(\Exception $e){
+            return response()->json([
+                'message' => 'Genere failed',
+                'error' => $e->getMessage()
+            ], 400);
         }
     }
 
     public function deleteGenere($id){
-        $genere = Genere::find($id);
-        if($genere){
+        try{
+            $genere = Genere::find($id);
+            if(is_null($genere)){
+                return response()->json([
+                    'message' => 'Genere not found',
+                ], 404);
+            }
             $genere->delete();
-            return response(['message'=>'Genere deleted'], 200);
-        }else{
-            return response(['message'=>'Genere not found'], 404);
+            return response()->json([
+                'message' => 'Genere successfully deleted',
+            ], 200);
+        }
+        catch(\Exception $e){
+            return response()->json([
+                'message' => 'Genere failed to delete',
+                'error' => $e->getMessage()
+            ], 400);
         }
     }
 }

@@ -125,8 +125,8 @@ class authController extends Controller
       $user = Auth::user();
 
       //Aun no hay JWT
-      $userToken = $user->tokens();
-      $userToken->delete();
+    //   $userToken = $user->tokens();
+    //   $userToken->delete();
       return response(['message'=> 'Logged Out!!'],200);
   }
 

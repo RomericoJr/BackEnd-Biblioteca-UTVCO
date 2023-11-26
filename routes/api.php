@@ -8,6 +8,7 @@ use App\Http\Controllers\SetAsaideController;
 use App\Http\Controllers\EstadiasController;
 
 use App\Http\Controllers\authController;
+use App\Http\Controllers\CarrerController;
 use App\Http\Controllers\StudentsController;
 
 use Illuminate\Http\Request;
@@ -30,9 +31,42 @@ use App\Http\Controllers\SubcategoryController;
 //     return $request->user();
 // });
 
-Route::group(['middleware' => 'jwt.auth'], function () {
-    // Rutas protegidas por JWT
-});
+Route::group(['middleware' => 'jwt.auth'], function ($router) {
+
+Route::get('Back%%Biblioteca_UTVCO/refresh', [authController::class, 'refresh']);
+Route::get('Back%%Biblioteca_UTVCO/logout', [authController::class, 'logout']);
+Route::get('Back%%Biblioteca_UTVCO/user-profile', [authController::class, 'userDetails']);
+
+
+Route::post('Back%%Biblioteca_UTVCO/registerStudent',[StudentsController::class, 'registerStudent']);
+Route::get('Back%%Biblioteca_UTVCO/getStudent',[StudentsController::class, 'getStudents']);
+Route::get('Back%%Biblioteca_UTVCO/getStudentByMatricula/{matricula}',[StudentsController::class, 'getStudentByMatricula']);
+Route::put('Back%%Biblioteca_UTVCO/updateStudent/{email}',[StudentsController::class, 'updateStudent']);
+
+
+//Rutas de Categorias
+// add categories
+Route::post('Back%%Biblioteca_UTVCO/addCategoria', [CategoryController::class, 'addCategory']);
+// get categories
+Route::get('Back%%Biblioteca_UTVCO/categoria', [CategoryController::class, 'getCategory']);
+// delete categories
+Route::delete('Back%%Biblioteca_UTVCO/deleteCategoria/{id}', [CategoryController::class, 'deleteCatego']);
+// get by id categories
+Route::get('Back%%Biblioteca_UTVCO/categoria/{id}', [CategoryController::class, 'getCategoId']);
+// update categories
+Route::put('Back%%Biblioteca_UTVCO/updateCategoria/{id}', [CategoryController::class, 'updateCatego']);
+
+//Rutas de Subcategorias
+// add sub-categories
+Route::post('Back%%Biblioteca_UTVCO/addSubcategoria', [SubcategoryController::class, 'addSubcategory']);
+// get sub-categories
+Route::get('Back%%Biblioteca_UTVCO/subcategoria', [SubcategoryController::class, 'getSubcategory']);
+// delete sub-categories
+Route::delete('Back%%Biblioteca_UTVCO/deleteSubategoria/{id}', [SubcategoryController::class, 'deleteSubcatego']);
+// get by id sub-categories
+Route::get('Back%%Biblioteca_UTVCO/subcategoria/{id}', [SubcategoryController::class, 'getSubcategoId']);
+// update sub-categories
+Route::put('Back%%Biblioteca_UTVCO/updateSubcategoria/{id}', [SubcategoryController::class, 'updateSubcatego']);
 
 
 //Controlador de libros
@@ -81,7 +115,7 @@ Route::delete('Back%%Biblioteca_UTVCO/delApartado/{id}',[SetAsaideController::cl
 //Funcion de donaciones
 Route::get('Back%%Biblioteca_UTVCO/donaciones',[EstadiasController::class, 'getEstadias']);
 //Funcion de donacion por id
-Route::get('Back%%Biblioteca_UTVCO/donacion/{id}',[EstadiasController::class, 'getEstadiasById']);
+Route::get('Back%%Biblioteca_UTVCO/donacion/{id}',[EstadiasController::class, 'getEstadiaById']);
 //Funcion de agregar donacion
 Route::post('Back%%Biblioteca_UTVCO/newDonacion',[EstadiasController::class, 'addEstadia']);
 //Funcion de editar donacion
@@ -90,40 +124,16 @@ Route::put('Back%%Biblioteca_UTVCO/editDonacion/{id}',[EstadiasController::class
 Route::delete('Back%%Biblioteca_UTVCO/delDonacion/{id}',[EstadiasController::class, 'deleteEstadia']);
 
 
+Route::get('Back%%Biblioteca_UTVCO/carrer', [CarrerController::class, 'getCarrer']);
+Route::get('Back%%Biblioteca_UTVCO/carrer/{id}', [CarrerController::class, 'getCarrerById']);
+Route::post('Back%%Biblioteca_UTVCO/addCarrer', [CarrerController::class, 'addCarrer']);
+Route::put('Back%%Biblioteca_UTVCO/updateCarrer/{id}', [CarrerController::class, 'updateCarrer']);
+Route::delete('Back%%Biblioteca_UTVCO/deleteCarrer/{id}', [CarrerController::class, 'deleteCarrer']);
+
+
+});
+
+
+
 Route::post('Back%%Biblioteca_UTVCO/login', [authController::class, 'login']);
 Route::post('Back%%Biblioteca_UTVCO/register', [authController::class, 'register']);
-Route::get('Back%%Biblioteca_UTVCO/refresh', [authController::class, 'refresh']);
-Route::get('Back%%Biblioteca_UTVCO/logout', [authController::class, 'logout']);
-Route::get('Back%%Biblioteca_UTVCO/user-profile', [authController::class, 'userDetails']);
-
-
-Route::post('Back%%Biblioteca_UTVCO/registerStudent',[StudentsController::class, 'registerStudent']);
-Route::get('Back%%Biblioteca_UTVCO/getStudent',[StudentsController::class, 'getStudents']);
-Route::get('Back%%Biblioteca_UTVCO/getStudentByMatricula/{matricula}',[StudentsController::class, 'getStudentByMatricula']);
-Route::put('Back%%Biblioteca_UTVCO/updateStudent/{email}',[StudentsController::class, 'updateStudent']);
-
-
-//Rutas de Categorias
-// add categories
-Route::post('Back%%Biblioteca_UTVCO/addCategoria', [CategoryController::class, 'addCategory']);
-// get categories
-Route::get('Back%%Biblioteca_UTVCO/categoria', [CategoryController::class, 'getCategory']);
-// delete categories
-Route::delete('Back%%Biblioteca_UTVCO/deleteCategoria/{id}', [CategoryController::class, 'deleteCatego']);
-// get by id categories
-Route::get('Back%%Biblioteca_UTVCO/categoria/{id}', [CategoryController::class, 'getCategoId']);
-// update categories
-Route::put('Back%%Biblioteca_UTVCO/updateCategoria/{id}', [CategoryController::class, 'updateCatego']);
-
-//Rutas de Subcategorias
-// add sub-categories
-Route::post('Back%%Biblioteca_UTVCO/addSubcategoria', [SubcategoryController::class, 'addSubcategory']);
-// get sub-categories
-Route::get('Back%%Biblioteca_UTVCO/subcategoria', [SubcategoryController::class, 'getSubcategory']);
-// delete sub-categories
-Route::delete('Back%%Biblioteca_UTVCO/deleteSubategoria/{id}', [SubcategoryController::class, 'deleteSubcatego']);
-// get by id sub-categories
-Route::get('Back%%Biblioteca_UTVCO/subcategoria/{id}', [SubcategoryController::class, 'getSubcategoId']);
-// update sub-categories
-Route::put('Back%%Biblioteca_UTVCO/updateSubcategoria/{id}', [SubcategoryController::class, 'updateSubcatego']);
-
