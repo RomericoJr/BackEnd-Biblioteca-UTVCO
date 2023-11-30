@@ -20,9 +20,13 @@ return new class extends Migration
             $table->string('phone');
             $table->string('email');
             $table->string('password');
+            $table->boolean('status')->default(true);
 
             $table->unsignedBigInteger('id_genere');
             $table->foreign('id_genere')->references('id')->on('generes');
+
+            $table->unsignedBigInteger('id_carrers');
+            $table->foreign('id_carrers')->references('id')->on('carrers');
 
             $table->timestamps();
         });

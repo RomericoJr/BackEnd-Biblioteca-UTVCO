@@ -121,4 +121,20 @@ class SubcategoryController extends Controller
             ], 400);
         }
     }
+
+    public function getSubcategoryByCategory($id){
+        try{
+            $subcategory = subcategory::where('id_category', $id)->get();
+            if(is_null($subcategory)){
+                return response()->json(['message' => 'Subcategory Not Found'], 404);
+            }
+            return response()->json($subcategory, 200);
+        }
+        catch(\Exception $e){
+            return response()->json([
+                'message' => 'Failed to query subcategory',
+                'error' => $e->getMessage()
+            ], 400);
+        }
+    }
 }

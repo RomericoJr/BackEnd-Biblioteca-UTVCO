@@ -20,6 +20,7 @@ class StudentsController extends Controller
                 'email' => 'required|string|email|max:255|unique:students',
                 'password'=> 'required|string|min:6',
                 'id_genere' => 'required|integer',
+                'id_carrers' => 'required|integer'
             ]);
 
             if($validate->fails()){
@@ -39,6 +40,7 @@ class StudentsController extends Controller
                 'email' => $request->get('email'),
                 'password' => $request->get('password'),
                 'id_genere' => $request->get('id_genere'),
+                'id_carrers' => $request->get('id_carrers')
             ]);
 
             $newUser = User::create([
@@ -65,7 +67,7 @@ class StudentsController extends Controller
 
     public function getStudents(){
         try{
-            $students = students::all();
+            $students = Students::with('genere', 'carrer')->get();
             return response()->json([
                 'success' => true,
                 'message' => 'Estudiantes obtenidos correctamente',
@@ -83,6 +85,40 @@ class StudentsController extends Controller
     public function getStudentByMatricula($matricula){
         try{
             $student = students::where('matricula', $matricula)->first();
+            return response()->json([
+                'success' => true,
+                'message' => 'Estudiante obtenido correctamente',
+                'data' => $student
+            ], 200);
+        } catch (\Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener el estudiante',
+                'errors' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function getStudentByEmail($email){
+        try{
+            $student = students::where('email', $email)->first();
+            return response()->json([
+                'success' => true,
+                'message' => 'Estudiante obtenido correctamente',
+                'data' => $student
+            ], 200);
+        } catch (\Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener el estudiante',
+                'errors' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function getStudentById($id){
+        try{
+            $student = students::find($id);
             return response()->json([
                 'success' => true,
                 'message' => 'Estudiante obtenido correctamente',
@@ -119,6 +155,7 @@ class StudentsController extends Controller
                 'email' => 'string|email|max:255',
                 'password'=> 'string|min:6',
                 'id_genere' => 'integer',
+                'id_carrers' => 'integer'
             ];
 
             $request->validate($rules);
@@ -131,7 +168,8 @@ class StudentsController extends Controller
                 'phone',
                 'email',
                 'password',
-                'id_genere'
+                'id_genere',
+                'id_carrers'
             ]));
 
             $studentUser->update($request->only([
@@ -154,6 +192,31 @@ class StudentsController extends Controller
                 'errors' => $e->getMessage()
             ], 400);
         }
+    }
+
+    public function disableStudent($id){
+        try{
+            $student = Students::find($id);
+
+            if(is_null($student)){
+                return response()->json([
+                    'message' => 'Student not found',
+                ], 404);
+            }
+
+            return response()->json([
+                'message' => 'Successful',
+                ''
+            ]);
+
+        }catch (\Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar el estudiante',
+                'errors' => $e->getMessage()
+            ], 400);
+        }
+
     }
 
 

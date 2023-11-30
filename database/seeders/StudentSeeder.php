@@ -22,6 +22,7 @@ class StudentSeeder extends Seeder
             'email' => 'juan@gmail.com',
             'password' => bcrypt('1234567890'),
             'id_genere' => 1,
+            'id_carrers' => 1,
         ];
         students::insert($student);
     }

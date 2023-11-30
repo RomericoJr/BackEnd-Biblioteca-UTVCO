@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 class BookController extends Controller
 {
     public function getBooks(){
-        $book = Book::all();
+        // $book = Book::all();
+        $book = Book::with('category', 'subcategory')->get();
         return response($book, 200);
     }
 
@@ -45,5 +46,5 @@ class BookController extends Controller
             return response(['message'=>'Book not found'], 404);
         }
     }
-    
+
 }

@@ -41,8 +41,10 @@ Route::get('Back%%Biblioteca_UTVCO/user-profile', [authController::class, 'userD
 Route::post('Back%%Biblioteca_UTVCO/registerStudent',[StudentsController::class, 'registerStudent']);
 Route::get('Back%%Biblioteca_UTVCO/getStudent',[StudentsController::class, 'getStudents']);
 Route::get('Back%%Biblioteca_UTVCO/getStudentByMatricula/{matricula}',[StudentsController::class, 'getStudentByMatricula']);
+Route::get('Back%%Biblioteca_UTVCO/getStudentById/{id}',[StudentsController::class, 'getStudentById']);
 Route::put('Back%%Biblioteca_UTVCO/updateStudent/{email}',[StudentsController::class, 'updateStudent']);
-
+Route::put('Back%%Biblioteca_UTVCO/disableStudent/{id}', [StudentsController::class, 'disableStudent']);
+Route::get('Back%%Biblioteca_UTVCO/getStudentByEmail/{email}',[StudentsController::class, 'getStudentByEmail']);
 
 //Rutas de Categorias
 // add categories
@@ -68,6 +70,7 @@ Route::get('Back%%Biblioteca_UTVCO/subcategoria/{id}', [SubcategoryController::c
 // update sub-categories
 Route::put('Back%%Biblioteca_UTVCO/updateSubcategoria/{id}', [SubcategoryController::class, 'updateSubcatego']);
 
+Route::get('Back%%Biblioteca_UTVCO/searchSucategoyByCategory/{id}', [SubcategoryController::class, 'getSubcategoryByCategory']);
 
 //Controlador de libros
 //Funcion de libros
