@@ -14,6 +14,7 @@ use App\Http\Controllers\StudentsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\LendbookController;
 use App\Http\Controllers\SubcategoryController;
 
 /*
@@ -112,7 +113,11 @@ Route::put('Back%%Biblioteca_UTVCO/editApartado/{id}',[SetAsaideController::clas
 //Funcion de eliminar apartado
 Route::delete('Back%%Biblioteca_UTVCO/delApartado/{id}',[SetAsaideController::class, 'deleteAsaide']);
 
+Route::get('Back%%Biblioteca_UTVCO/apartadoByStudent/{id}',[SetAsaideController::class, 'getApartadoByIdStudent']);
 
+Route::put('Back%%Biblioteca_UTVCO/updateApartadoStatus/{id}',[SetAsaideController::class, 'updateApartadoStatus']);
+
+Route::put('Back%%Biblioteca_UTVCO/updateStatus01/{id}',[SetAsaideController::class, 'updateStatus']);
 
 //Controlador de Donaciones de estadias
 //Funcion de donaciones
@@ -132,6 +137,11 @@ Route::get('Back%%Biblioteca_UTVCO/carrer/{id}', [CarrerController::class, 'getC
 Route::post('Back%%Biblioteca_UTVCO/addCarrer', [CarrerController::class, 'addCarrer']);
 Route::put('Back%%Biblioteca_UTVCO/updateCarrer/{id}', [CarrerController::class, 'updateCarrer']);
 Route::delete('Back%%Biblioteca_UTVCO/deleteCarrer/{id}', [CarrerController::class, 'deleteCarrer']);
+
+
+Route::get('Back%%Biblioteca_UTVCO/lendBook', [LendbookController::class, 'getLendbooks']);
+
+Route::get('Back%%Biblioteca_UTVCO/returnBook/{id}', [LendbookController::class, 'returnBook']);
 
 
 });

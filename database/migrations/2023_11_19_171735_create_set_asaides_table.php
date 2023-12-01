@@ -22,7 +22,7 @@ return new class extends Migration
 
             $table->date('date_set_asaide');
 
-            $table->boolean('status');
+            $table->integer('status')->default(2);
 
             $table->timestamps();
         });

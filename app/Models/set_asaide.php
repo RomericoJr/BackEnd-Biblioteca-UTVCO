@@ -15,4 +15,14 @@ class set_asaide extends Model
         'date_set_asaide',
         'status',
     ];
+
+    public function book(){
+        return $this->belongsTo(Book::class, 'id_book');
+    }
+
+    public function student(){
+        return $this->belongsTo(students::class, 'id_student');
+    }
+
+
 }

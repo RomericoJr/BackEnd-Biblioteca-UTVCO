@@ -16,4 +16,16 @@ class lendbook extends Model
         'return_date',
         'status',
     ];
+
+    public function book(){
+        return $this->belongsTo(book::class, 'id_book');
+    }
+
+    public function student(){
+        return $this->belongsTo(students::class, 'id_student');
+    }
+
+
+
+
 }

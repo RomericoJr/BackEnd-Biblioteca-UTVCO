@@ -2,42 +2,189 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\book;
+use App\Models\lendbook;
 use App\Models\Set_asaide as Apartados;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SetAsaideController extends Controller
 {
     public function getApartados(){
-        $apartados = Apartados::all();
-        return response($apartados, 200);
-    }
-
-    public function getApartadoById($id){
-        $apartado = Apartados::find($id);
-        if($apartado){
-            return response($apartado, 200);
-        } else {
-            return response(['message' => 'not found'], 404);
+        try{
+            $apartados = Apartados::with('book','student')->get();
+            if($apartados){
+                return response($apartados, 200);
+            }else{
+                return response(['message'=>'not found'], 404);
+            }
+        } catch (\Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener los apartados',
+                'errors' => $e->getMessage()
+            ], 500);
         }
     }
-    
+
+    public function getApartadoByIdStudent($id){
+        try{
+            $apartados = Apartados::where('id_student', $id)
+            ->addSelect([
+                'book_name' => Book::select('title')
+                ->whereColumn('id_book', 'id')
+                ])
+            ->get();
+            if($apartados){
+                return response($apartados, 200);
+            }else{
+                return response(['message'=>'not found'], 404);
+            }
+        } catch (\Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener los apartados',
+                'errors' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 
     public function addApartado(Request $request){
-        print_r($request);
+        try{
+                $validator = Validator::make($request->all(),[
+                    'id_book' => 'required|integer',
+                    'id_student' => 'required|integer',
+                    'date_set_asaide' => 'required|date',
+                    'status' => 'required|string|max:255',
+                ]);
+                if($validator->fails()){
+                    return response()->json($validator->errors()->toJson(),400);
+                }
+                $apartado = Apartados::create([
+                    'id_book' => $request->get('id_book'),
+                    'id_student' => $request->get('id_student'),
+                    'date_set_asaide' => $request->get('date_set_asaide'),
+                    'status' => $request->get('status'),
+                ]);
+                return response()->json([
+                    'message' => 'Apartado successfully',
+                    'apartado' => $apartado
+                ], 201);
 
-
-        $apartados = Apartados::create($request->all());
-        return response($apartados, 201);
+        } catch (\Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al registrar el apartado',
+                'errors' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    public function updateApartado(Request $request, $id){
-        $apartados = Apartados::find($id);
-        if(is_null($genere)){
-            return response(['message'=>' not found'], 404);
-        }else{
-            $genere->save($request->all());
-            return response($apartados, 200);
+
+    public function updateStatus(Request $request, $id){
+        try{
+            // $pendiente = 2;
+            $Aprobado = 1;
+            $rechazado = 0;
+
+            if($request->get('status') == 1){
+                $apartado = Apartados::find($id);
+
+                if(!$apartado){
+                    return response()->json([
+                        'message' => 'Apartado not found',
+                    ], 404);
+                }
+
+                $book = Book::find($apartado->id_book);
+
+                if(!$book){
+                    return response()->json([
+                        'message' => 'Book not found',
+                    ], 404);
+                }
+
+                $newLendBook = lendbook::create([
+                    'id_book' => $apartado->id_book,
+                    'id_student' => $apartado->id_student,
+                    'lend_date' => now()->toDateString(),
+                    'status' => $Aprobado,
+                ]);
+
+                $status = $request->get('status');
+                // $apartado->status = $request->get('status');
+
+                $apartado->update([
+                    'status' => $status,
+                ]);
+
+                $book->update([
+                    'stock' => $book->stock - 1,
+                ]);
+
+                return response()->json([
+                    'message' => 'Aprobado successfully',
+                    'data' => [
+                        'NewLend' => $newLendBook,
+                        'setAsaide' => $apartado,
+                        'book' => $book
+                        ]
+                ], 201);
+            }else if($request->get('status') == 0){
+                $apartado = Apartados::find($id);
+
+                if(!$apartado){
+                    return response()->json([
+                        'message' => 'Apartado not found',
+                    ], 404);
+                }
+
+                $status = $request->get('status');
+
+                $apartado->update([
+                    'status' => $status,
+                ]);
+
+                return response()->json([
+                    'message' => 'Rechazado successfully',
+                    'apartado' => $apartado
+                ], 201);
+            }
+
         }
+        catch (\Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al registrar el apartado',
+                'errors' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+
+
+
+    public function updateApartadoStatus(Request $request, $id){
+        try{
+            if($request->get('status') == 2){
+                $apartado = Apartados::find($id);
+                $apartado->status = $request->get('status');
+                $apartado->save();
+                return response()->json([
+                    'message' => 'Apartado successfully',
+                    'apartado' => $apartado
+                ], 201);
+        }
+    } catch (\Exception $e){
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al registrar el apartado',
+            'errors' => $e->getMessage()
+        ], 500);
+    }
+
     }
 
     public function deleteApartado($id){

@@ -14,8 +14,19 @@ class CarrerSeeder extends Seeder
     public function run(): void
     {
         $carrer = [
-            ['carrer_name' => 'Tecnologia de nformacion'],
+            ['carrer_name' => 'Tecnologia de informacion'],
             ['carrer_name' => 'Desarrollo y Gestión de Software'],
+            ['carrer_name' => 'Ingeniería en Sistemas Computacionales'],
+            ['carrer_name' => 'Ingeniería en Tecnologías de la Información y Comunicaciones'],
+            ['carrer_name' => 'Ingeniería en Tecnologías de la Información'],
+            ['carrer_name' => 'Ingeniería en Tecnologías de la Información y Comunicaciones'],
+            ['carrer_name' => 'Ingeniería en Tecnologías de la Información y Comunicaciones'],
+            ['carrer_name' => 'Ingeniería en Tecnologías de la Información y Comunicaciones'],
+            ['carrer_name' => 'Ingeniería en Tecnologías de la Información y Comunicaciones'],
+            ['carrer_name' => 'Ingeniería en Tecnologías de la Información y Comunicaciones'],
+            ['carrer_name' => 'Ingeniería en Tecnologías de la Información y Comunicaciones'],
+            ['carrer_name' => 'Ingeniería en Tecnologías de la Información y Comunicaciones'],
+            ['carrer_name' => 'Ingeniería en Tecnologías de la Información y Comunicaciones'],
         ];
         carrer::insert($carrer);
     }

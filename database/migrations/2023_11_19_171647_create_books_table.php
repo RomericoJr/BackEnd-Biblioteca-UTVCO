@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('author');
             $table->string('editorial');
             $table->string('edition');
-            $table->string('stock');
+            $table->integer('stock');
 
             $table->unsignedBigInteger('id_category');
             $table->foreign('id_category')->references('id')->on('categories');
