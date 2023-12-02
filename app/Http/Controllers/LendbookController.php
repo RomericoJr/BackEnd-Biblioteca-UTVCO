@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\book;
 use App\Models\lendbook;
+use App\Models\set_asaide;
 use Illuminate\Http\Request;
 
 class LendbookController extends Controller
@@ -36,10 +37,10 @@ class LendbookController extends Controller
 
     public function returnBook($id){
         try{
-            $rechazado = 0;
-            $Aprobado = 1;
-            $Pendiente = 2;
-            $Devuelto = 3;
+            $rechazado = '1';
+            $Aprobado = '2';
+            $pendiente = '3';
+            $Devuelto = '4';
 
             $lendbook = lendbook::find($id);
 
@@ -59,6 +60,15 @@ class LendbookController extends Controller
                 ], 404);
             }
 
+            $set_asaide = set_asaide::find($lendbook->id_book);
+
+            if(!$set_asaide){
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontro el apartado'
+                ], 404);
+            }
+
             $lendbook->update([
                 'return_date' => now()->toDateString(),
                 'status' => $Devuelto
@@ -66,6 +76,10 @@ class LendbookController extends Controller
 
             $book->update([
                 'stock' => $book->stock + 1,
+            ]);
+
+            $set_asaide->update([
+                'id_status' => $Devuelto
             ]);
 
             return response()->json([

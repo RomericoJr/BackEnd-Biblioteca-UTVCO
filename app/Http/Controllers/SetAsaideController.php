@@ -12,7 +12,7 @@ class SetAsaideController extends Controller
 {
     public function getApartados(){
         try{
-            $apartados = Apartados::with('book','student')->get();
+            $apartados = Apartados::with('book')->get();
             if($apartados){
                 return response($apartados, 200);
             }else{
@@ -56,7 +56,7 @@ class SetAsaideController extends Controller
                     'id_book' => 'required|integer',
                     'id_student' => 'required|integer',
                     'date_set_asaide' => 'required|date',
-                    'status' => 'required|string|max:255',
+                    // 'id_status' => 'required|string|max:255',
                 ]);
                 if($validator->fails()){
                     return response()->json($validator->errors()->toJson(),400);
@@ -65,7 +65,7 @@ class SetAsaideController extends Controller
                     'id_book' => $request->get('id_book'),
                     'id_student' => $request->get('id_student'),
                     'date_set_asaide' => $request->get('date_set_asaide'),
-                    'status' => $request->get('status'),
+                    // 'id_status' => $request->get('status'),
                 ]);
                 return response()->json([
                     'message' => 'Apartado successfully',
@@ -84,11 +84,12 @@ class SetAsaideController extends Controller
 
     public function updateStatus(Request $request, $id){
         try{
-            // $pendiente = 2;
-            $Aprobado = 1;
-            $rechazado = 0;
+            $rechazado = '1';
+            $Aprobado = '2';
+            $pendiente = '3';
+            $devuelto = '4';
 
-            if($request->get('status') == 1){
+            if($request->get('status') == $Aprobado){
                 $apartado = Apartados::find($id);
 
                 if(!$apartado){
@@ -109,6 +110,7 @@ class SetAsaideController extends Controller
                     'id_book' => $apartado->id_book,
                     'id_student' => $apartado->id_student,
                     'lend_date' => now()->toDateString(),
+                    'id_set_asaide' => $apartado->id,
                     'status' => $Aprobado,
                 ]);
 
@@ -131,7 +133,7 @@ class SetAsaideController extends Controller
                         'book' => $book
                         ]
                 ], 201);
-            }else if($request->get('status') == 0){
+            }else if($request->get('status') == $rechazado){
                 $apartado = Apartados::find($id);
 
                 if(!$apartado){

@@ -22,7 +22,9 @@ return new class extends Migration
 
             $table->date('date_set_asaide');
 
-            $table->integer('status')->default(2);
+
+            $table->unsignedBigInteger('id_status')->default('3');
+            $table->foreign('id_status')->references('id')->on('statuses');
 
             $table->timestamps();
         });

@@ -13,7 +13,7 @@ class set_asaide extends Model
         'id_book',
         'id_student',
         'date_set_asaide',
-        'status',
+        'id_status',
     ];
 
     public function book(){
@@ -24,5 +24,7 @@ class set_asaide extends Model
         return $this->belongsTo(students::class, 'id_student');
     }
 
-
+    public function status(){
+        return $this->belongsTo(status::class, 'id_status');
+    }
 }

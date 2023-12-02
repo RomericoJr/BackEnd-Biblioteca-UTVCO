@@ -23,10 +23,12 @@ return new class extends Migration
             $table->date('lend_date');
             $table->date('return_date')->nullable();
             // $table->date('return_date_real');
-            // $table->boolean('returned');
-            $table->boolean('status');
 
+            $table->unsignedBigInteger('id_status')->default('3');
+            $table->foreign('id_status')->references('id')->on('statuses');
 
+            $table->unsignedBigInteger('id_set_asaide');
+            $table->foreign('id_set_asaide')->references('id')->on('set_asaides');
 
 
             $table->timestamps();

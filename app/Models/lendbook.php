@@ -15,6 +15,7 @@ class lendbook extends Model
         'lend_date',
         'return_date',
         'status',
+        'id_set_asaide',
     ];
 
     public function book(){
@@ -25,7 +26,11 @@ class lendbook extends Model
         return $this->belongsTo(students::class, 'id_student');
     }
 
+    public function status(){
+        return $this->belongsTo(status::class, 'status');
+    }
 
-
-
+    public function set_asaide(){
+        return $this->belongsTo(Set_asaide::class, 'id_set_asaide');
+    }
 }
