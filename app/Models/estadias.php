@@ -14,5 +14,11 @@ class estadias extends Model
         'author',
         'description',
         'copias',
+        'carrer_id'
     ];
+
+    public function carrer(){
+        return $this->belongsTo(Carrer::class);
+    }
+
 }

@@ -10,7 +10,7 @@ class EstadiasController extends Controller
 {
     public function getEstadias(){
         try{
-            $estadias = Estadias::all();
+            $estadias = Estadias::with('carrer')->get();
 
             if(!$estadias){
                 return response()->json([
@@ -67,6 +67,7 @@ class EstadiasController extends Controller
                 'author' => 'required|string|max:255',
                 'description' => 'required|string|max:255',
                 'copias' => 'required|integer',
+                'carrer_id' => 'required|integer'
             ]);
             if($validate->fails()){
                 return response()->json($validate->errors()->toJson(),400);
@@ -77,6 +78,7 @@ class EstadiasController extends Controller
                 'author' => $request->get('author'),
                 'description' => $request->get('description'),
                 'copias' => $request->get('copias'),
+                'carrer_id' => $request->get('carrer_id')
             ]);
 
             return response()->json([
@@ -94,30 +96,33 @@ class EstadiasController extends Controller
 
     public function updateEstadia(Request $request, $id){
         try{
+            $validator = Validator::make($request->all(),[
+                'title' => 'string|max:255',
+                'author' => 'string|max:255',
+                'description' => 'string|max:255',
+                'copias' => 'integer',
+                'carrer_id' => 'integer'
+            ]);
+
+            if($validator->fails()){
+                return response()->json($validator->errors()->toJson(),400);
+            }
+
             $estadia = Estadias::find($id);
 
             if(!$estadia){
                 return response()->json([
                     'success' => false,
                     'message' => 'No se encontro la estadia',
-                    'errors' => null
                 ], 404);
             }
 
-            $rules = [
-                'title' => 'string|max:255',
-                'author' => 'string|max:255',
-                'description' => 'string|max:255',
-                'copias' => 'integer',
-            ];
-
-            $validate = Validator::make($request->all(), $rules);
-
-            if($validate->fails()){
-                return response()->json($validate->errors()->toJson(),400);
-            }
-
-            $estadia->update($request->all());
+            $estadia->update([
+                'title' => $request->get('title'),
+                'author' => $request->get('author'),
+                'description' => $request->get('description'),
+                'copias' => $request->get('copias'),
+            ]);
 
             return response()->json([
                 'success' => true,

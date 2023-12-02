@@ -12,7 +12,7 @@ class SetAsaideController extends Controller
 {
     public function getApartados(){
         try{
-            $apartados = Apartados::with('book')->get();
+            $apartados = Apartados::with('book','student','status')->get();
             if($apartados){
                 return response($apartados, 200);
             }else{

@@ -17,6 +17,9 @@ return new class extends Migration
             $table->string('author');
             $table->string('description');
             $table->string('copias');
+
+            $table->unsignedBigInteger('carrer_id');
+            $table->foreign('carrer_id')->references('id')->on('carrers');
             $table->timestamps();
         });
     }
