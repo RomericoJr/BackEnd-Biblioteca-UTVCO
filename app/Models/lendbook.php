@@ -14,7 +14,7 @@ class lendbook extends Model
         'id_student',
         'lend_date',
         'return_date',
-        'status',
+        'id_status',
         'id_set_asaide',
     ];
 

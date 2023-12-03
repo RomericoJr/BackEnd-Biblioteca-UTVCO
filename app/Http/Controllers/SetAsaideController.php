@@ -50,27 +50,125 @@ class SetAsaideController extends Controller
     }
 
 
+    // public function addApartado(Request $request){
+    //     try{
+    //             $validator = Validator::make($request->all(),[
+    //                 'id_book' => 'required|integer',
+    //                 'id_student' => 'required|integer',
+    //                 'date_set_asaide' => 'required|date',
+    //                 // 'id_status' => 'required|string|max:255',
+    //             ]);
+    //             if($validator->fails()){
+    //                 return response()->json($validator->errors()->toJson(),400);
+    //             }
+    //             $apartado = Apartados::create([
+    //                 'id_book' => $request->get('id_book'),
+    //                 'id_student' => $request->get('id_student'),
+    //                 'date_set_asaide' => $request->get('date_set_asaide'),
+    //                 // 'id_status' => $request->get('status'),
+    //             ]);
+    //             return response()->json([
+    //                 'message' => 'Apartado successfully',
+    //                 'apartado' => $apartado
+    //             ], 201);
+
+    //     } catch (\Exception $e){
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Error al registrar el apartado',
+    //             'errors' => $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
+
+    // public function addApartado(Request $request){
+    //     try{
+    //         $validator = Validator::make($request->all(), [
+    //             'id_book' => 'required|integer',
+    //             'id_student' => 'required|integer',
+    //             'date_set_asaide' => 'required|date',
+    //         ]);
+
+    //         if($validator->fails()){
+    //             return response()->json($validator->errors()->toJson(), 400);
+    //         }
+
+    //         // Verificar si ya existe un apartado para el libro y el usuario
+    //         $existingApartado = Apartados::where('id_student', $request->get('id_student'))
+    //             ->where('id_book', $request->get('id_book'))
+    //             ->first();
+
+    //         if($existingApartado){
+    //             return response()->json([
+    //                 'message' => 'El usuario ya tiene un apartado pendiente para este libro',
+    //             ], 400);
+    //         }
+
+    //         $apartado = Apartados::create([
+    //             'id_book' => $request->get('id_book'),
+    //             'id_student' => $request->get('id_student'),
+    //             'date_set_asaide' => $request->get('date_set_asaide'),
+    //         ]);
+
+    //         return response()->json([
+    //             'message' => 'Apartado successfully',
+    //             'apartado' => $apartado
+    //         ], 201);
+
+    //     } catch (\Exception $e){
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Error al registrar el apartado',
+    //             'errors' => $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
+
     public function addApartado(Request $request){
         try{
-                $validator = Validator::make($request->all(),[
-                    'id_book' => 'required|integer',
-                    'id_student' => 'required|integer',
-                    'date_set_asaide' => 'required|date',
-                    // 'id_status' => 'required|string|max:255',
-                ]);
-                if($validator->fails()){
-                    return response()->json($validator->errors()->toJson(),400);
-                }
+            $validator = Validator::make($request->all(), [
+                'id_book' => 'required|integer',
+                'id_student' => 'required|integer',
+                'date_set_asaide' => 'required|date',
+            ]);
+
+            if($validator->fails()){
+                return response()->json($validator->errors()->toJson(), 400);
+            }
+
+            $existingLend = Apartados::where('id_student', $request->get('id_student'))
+            ->where('id_book', $request->get('id_book'))
+            ->whereIn('id_status', [2, 3])
+            ->first();
+
+            if($existingLend){
+                return response()->json([
+                    'message' => 'El usuario tiene un libro pero no lo ha devuelto asi que no se lo prestamos',
+                ], 400);
+            }
+
+            $existingApartado = Apartados::where('id_student', $request->get('id_student'))
+                ->where('id_book', $request->get('id_book'))
+                ->first();
+
+            $status = $existingApartado ? $existingApartado->id_status : null;
+
+            if ($status != '3') {
                 $apartado = Apartados::create([
                     'id_book' => $request->get('id_book'),
                     'id_student' => $request->get('id_student'),
                     'date_set_asaide' => $request->get('date_set_asaide'),
-                    // 'id_status' => $request->get('status'),
                 ]);
+
                 return response()->json([
                     'message' => 'Apartado successfully',
                     'apartado' => $apartado
                 ], 201);
+            } else {
+                return response()->json([
+                    'message' => 'El usuario no puede requerir el mismo libro',
+                ], 400);
+            }
 
         } catch (\Exception $e){
             return response()->json([
@@ -82,6 +180,8 @@ class SetAsaideController extends Controller
     }
 
 
+
+
     public function updateStatus(Request $request, $id){
         try{
             $rechazado = '1';
@@ -89,7 +189,7 @@ class SetAsaideController extends Controller
             $pendiente = '3';
             $devuelto = '4';
 
-            if($request->get('status') == $Aprobado){
+            if($request->get('id_status') == $Aprobado){
                 $apartado = Apartados::find($id);
 
                 if(!$apartado){
@@ -111,14 +211,14 @@ class SetAsaideController extends Controller
                     'id_student' => $apartado->id_student,
                     'lend_date' => now()->toDateString(),
                     'id_set_asaide' => $apartado->id,
-                    'status' => $Aprobado,
+                    'id_status' => $Aprobado,
                 ]);
 
-                $status = $request->get('status');
+                $status = $request->get('id_status');
                 // $apartado->status = $request->get('status');
 
                 $apartado->update([
-                    'status' => $status,
+                    'id_status' => $status,
                 ]);
 
                 $book->update([
@@ -133,7 +233,7 @@ class SetAsaideController extends Controller
                         'book' => $book
                         ]
                 ], 201);
-            }else if($request->get('status') == $rechazado){
+            }else if($request->get('id_status') == $rechazado){
                 $apartado = Apartados::find($id);
 
                 if(!$apartado){
@@ -142,10 +242,10 @@ class SetAsaideController extends Controller
                     ], 404);
                 }
 
-                $status = $request->get('status');
+                $status = $request->get('id_status');
 
                 $apartado->update([
-                    'status' => $status,
+                    'id_status' => $status,
                 ]);
 
                 return response()->json([

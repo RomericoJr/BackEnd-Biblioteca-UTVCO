@@ -6,7 +6,9 @@ use App\Models\rol;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class authController extends Controller
@@ -33,16 +35,16 @@ class authController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     protected function respondWithToken($token)
-{
-    $expiration = JWTAuth::factory()->getTTL() * 60;
+    {
+        $expiration = JWTAuth::factory()->getTTL() * 60;
 
-    return response()->json([
-        'access_token' => $token,
-        'token_type' => 'bearer',
-        'expires_in' => $expiration,
-        'expiration_date' => now()->addSeconds($expiration)->toDateTimeString(),
-    ]);
-}
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => $expiration,
+            'expiration_date' => now()->addSeconds($expiration)->toDateTimeString(),
+        ]);
+    }
 
 
     public function register(Request $request){
@@ -74,43 +76,73 @@ class authController extends Controller
         }
     }
 
-    public function login(Request $request){
-        try{
-            if(!Auth::attempt($request->only('email', 'password')))
-            {
-                return response()
-                    ->json(['message'=>'Unauthorized'],401);
+    // public function login(Request $request){
+    //     try{
+    //         if(!Auth::attempt($request->only('email', 'password')))
+    //         {
+    //             return response()
+    //                 ->json(['message'=>'Unauthorized'],401);
+    //         }
+
+    //         $user = User::where('email', $request['email'])
+    //         ->addSelect(
+    //             [
+    //                 'rol' =>rol::select('rol')
+    //                 ->whereColumn('id_rol','id')
+    //             ]
+    //         )
+    //         ->firstOrFail();
+
+    //         $token = JWTAuth::fromUser($user);
+
+    //         $cookie = cookie('jwt', $token, 60*24); // 1 day
+
+    //         return response()
+    //             ->json([
+    //                 'message' => 'Success',
+    //                 'user' => $user,
+    //                 'token' => $this->respondWithToken($token),
+    //             ])
+    //             ->withCookie($cookie);
+    //     }
+    //     catch(\Exception $e){
+    //         return response()->json([
+    //             'message' => 'Error al iniciar sesión',
+    //             'error'=>$e->getMessage()],500);
+    //     }
+
+
+    // }
+
+    public function login(Request $request)
+    {
+        try {
+            if (!Auth::attempt($request->only('email', 'password'))) {
+                return response()->json(['message' => 'Unauthorized'], 401);
             }
 
             $user = User::where('email', $request['email'])
-            ->addSelect(
-                [
-                    'rol' =>rol::select('rol')
-                    ->whereColumn('id_rol','id')
-                ]
-            )
-            ->firstOrFail();
+                ->addSelect([
+                    'rol' => rol::select('rol')->whereColumn('id_rol', 'id')
+                ])
+                ->firstOrFail();
 
             $token = JWTAuth::fromUser($user);
+            Log::info('Token generado: ' . $token);
 
-            $cookie = cookie('jwt', $token, 60*24); // 1 day
-
-            return response()
-                ->json([
-                    'message' => 'Success',
-                    'user' => $user,
-                    'token' => $this->respondWithToken($token),
-                ])
-                ->withCookie($cookie);
-        }
-        catch(\Exception $e){
+            return response()->json([
+                'message' => 'Success',
+                'user' => $user,
+                'token' => $this->respondWithToken($token),
+            ]);
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al iniciar sesión',
-                'error'=>$e->getMessage()],500);
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-
     }
+
 
     public function userDetails()
     {
@@ -125,9 +157,11 @@ class authController extends Controller
       $user = Auth::user();
 
       //Aun no hay JWT
-    //   $userToken = $user->tokens();
-    //   $userToken->delete();
+      $userToken = $user->tokens();
+      $userToken->delete();
       return response(['message'=> 'Logged Out!!'],200);
   }
+
+
 
 }
