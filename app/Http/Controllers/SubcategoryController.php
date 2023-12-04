@@ -13,7 +13,7 @@ class SubcategoryController extends Controller
     public function addSubcategory(Request $request){
         try{
             $validator = Validator::make($request->all(),[
-                'subcategory' => 'required|string|max:255',
+                'subcategory' => 'required|string|max:50',
                 'id_category' => 'required',
             ]);
             if($validator->fails()){
