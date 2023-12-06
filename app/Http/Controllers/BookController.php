@@ -47,11 +47,11 @@ class BookController extends Controller
     public function addBook(Request $request){
         try{
             $validate = Validator::make($request->all(),[
-                'isbn' => 'required|string|max:255',
-                'title' => 'required|string|max:255',
-                'author' => 'required|string|max:255',
-                'editorial' => 'required|string|max:255',
-                'edition' => 'required|string|max:255',
+                'isbn' => 'required|string|max:50',
+                'title' => 'required|string|max:50',
+                'author' => 'required|string|max:50',
+                'editorial' => 'required|string|max:50',
+                'edition' => 'required|string|max:50',
                 'stock' => 'required|integer',
                 'id_category' => 'required|integer',
                 'id_subcategory' => 'required|integer'

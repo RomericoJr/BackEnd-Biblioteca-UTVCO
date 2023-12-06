@@ -50,8 +50,8 @@ class authController extends Controller
     public function register(Request $request){
         try{
             $validator = Validator::make($request->all(),[
-                'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users',
+                'name' => 'required|string|max:50',
+                'email' => 'required|string|email|max:50|unique:users',
                 'password'=> 'required|string|min:6',
                 'id_rol' => 'required|integer',
                 'id_students' => 'integer'

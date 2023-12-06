@@ -63,8 +63,8 @@ class EstadiasController extends Controller
     public function addEstadia(Request $request){
         try{
             $validate = Validator::make($request->all(),[
-                'title' => 'required|string|max:255',
-                'author' => 'required|string|max:255',
+                'title' => 'required|string|max:50',
+                'author' => 'required|string|max:50',
                 'description' => 'required|string|max:255',
                 'copias' => 'required|integer',
                 'carrer_id' => 'required|integer'

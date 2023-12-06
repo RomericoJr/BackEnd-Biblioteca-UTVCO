@@ -48,7 +48,7 @@ class GenereController extends Controller
     public function addGenere(Request $request){
         try{
             $validator = Validator::make($request->all(),[
-                'genere' => 'required|string|max:255',
+                'genere' => 'required|string|max:50',
             ]);
             if($validator->fails()){
                 return response()->json($validator->errors()->toJson(),400);

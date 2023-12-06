@@ -53,7 +53,7 @@ class CarrerController extends Controller
     {
         try{
             $validator = Validator::make($request->all(),[
-                'carrer_name' => 'required|string|max:255',
+                'carrer_name' => 'required|string|max:50',
             ]);
             if($validator->fails()){
                 return response()->json($validator->errors()->toJson(),400);

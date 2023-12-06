@@ -22,7 +22,7 @@ class CategoryController extends Controller
     {
         try{
             $validator = Validator::make($request->all(),[
-                'category' => 'required|string|max:255',
+                'category' => 'required|string|max:50',
             ]);
             if($validator->fails()){
                 return response()->json($validator->errors()->toJson(),400);

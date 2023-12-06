@@ -12,12 +12,12 @@ class StudentsController extends Controller
     public function registerStudent(Request $request){
         try{
             $validate = Validator::make($request->all(),[
-                'name' => 'required|string|max:255',
-                'lastname_father' => 'required|string|max:255',
-                'lastname_mother' => 'required|string|max:255',
-                'matricula' => 'required|string|max:255|unique:students',
-                'phone' => 'required|string|max:255|unique:students',
-                'email' => 'required|string|email|max:255|unique:students',
+                'name' => 'required|string|max:50',
+                'lastname_father' => 'required|string|max:50',
+                'lastname_mother' => 'required|string|max:50',
+                'matricula' => 'required|string|max:10|unique:students',
+                'phone' => 'required|string|max:10|unique:students',
+                'email' => 'required|string|email|max:50|unique:students',
                 'password'=> 'required|string|min:6',
                 'id_genere' => 'required|integer',
                 'id_carrers' => 'required|integer'
