@@ -147,11 +147,12 @@ class SetAsaideController extends Controller
                 ], 400);
             }
 
-            $existingApartado = Apartados::where('id_student', $request->get('id_student'))
-                ->where('id_book', $request->get('id_book'))
-                ->first();
+            $status = $existingLend ? $existingLend->id_status : null;
+            // $existingApartado = Apartados::where('id_student', $request->get('id_student'))
+            //     ->where('id_book', $request->get('id_book'))
+            //     ->first();
 
-            $status = $existingApartado ? $existingApartado->id_status : null;
+            // $status = $existingApartado ? $existingApartado->id_status : null;
 
             if ($status != '3') {
                 $apartado = Apartados::create([
