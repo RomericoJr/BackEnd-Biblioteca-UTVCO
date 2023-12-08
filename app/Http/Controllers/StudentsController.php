@@ -118,7 +118,7 @@ class StudentsController extends Controller
 
     public function getStudentById($id){
         try{
-            $student = students::find($id);
+            $student = students::find($id)->with('genere', 'carrer')->first();
             return response()->json([
                 'success' => true,
                 'message' => 'Estudiante obtenido correctamente',
